@@ -1,0 +1,9 @@
+oqs-apidocs/
+oqs-client/
+oqs-db/
+oqs-helpdocs/
+oqs-server/
+oqs-smoketests/
+config/
+coverage/
+.env

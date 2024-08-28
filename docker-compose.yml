@@ -1,0 +1,77 @@
+version: '2'
+services:
+  nginx:
+    build: .
+    ports:
+     - "80:80"
+    depends_on:
+     - client
+     - express
+     - swagger
+     - helpdocs
+    volumes:
+     - ./nginx/development.conf:/etc/nginx/conf.d/default.conf
+     - baseline_version:/etc/nginx/conf.d/version-info
+    command: [nginx-debug, '-g', 'daemon off;']
+
+  client:
+    build: oqs-client
+    volumes:
+     - ./oqs-client/:/opt/mean.js
+     - /opt/mean.js/node_modules
+     - client_version:/opt/mean.js/version-info
+
+  express:
+    build: oqs-server
+    environment:
+     - DB_1_PORT_27017_TCP_ADDR=mongodb
+     - LDAP_URL=${LDAP_URL}
+     - SEARCH_FILTER=${SEARCH_FILTER}
+     - BASE_DN_LIST=${BASE_DN_LIST}
+     - UPGRADE_TOOL_URL=${UPGRADE_TOOL_URL}
+     - OQS_EMAIL_ADDRESS=${OQS_EMAIL_ADDRESS}
+     - DTT_EMAIL_ADDRESS=${DTT_EMAIL_ADDRESS}
+     - DTT_EMAIL_PASSWORD=${DTT_EMAIL_PASSWORD}
+     - TEAM_EMAIL=${TEAM_EMAIL}
+    links:
+     - mongodb
+    depends_on:
+     - mongodb
+     - ldap
+    volumes:
+     - ./oqs-server/:/usr/src/app
+     - /usr/src/app/node_modules
+     - baseline_version:/usr/src/app/version-info/baseline
+     - client_version:/usr/src/app/version-info/client
+     - helpdocs_version:/usr/src/app/version-info/helpdocs
+     - apidocs_version:/usr/src/app/version-info/apidocs
+
+  mongodb:
+    image: armdocker.seli.gic.ericsson.se/dockerhub-ericsson-remote/mongo:4.0.14
+    ports:
+     - '27018:27017'
+    volumes:
+     - mongodb_data:/data/db
+     - mongodb_logs:/var/log/mongodb
+
+  ldap:
+    image: armdocker.seli.gic.ericsson.se/dockerhub-ericsson-remote/osixia/openldap:1.2.2
+
+  swagger:
+    build: oqs-apidocs
+    volumes:
+     - apidocs_version:/usr/src/app/version-info
+
+  helpdocs:
+    build: oqs-helpdocs
+    volumes:
+     - ./oqs-helpdocs/helpdocs/help/en-us/helpdocs:/opt/helpdocs/help/en-us/helpdocs
+     - helpdocs_version:/opt/helpdocs/version-info
+
+volumes:
+  baseline_version:
+  client_version:
+  apidocs_version:
+  helpdocs_version:
+  mongodb_data:
+  mongodb_logs:

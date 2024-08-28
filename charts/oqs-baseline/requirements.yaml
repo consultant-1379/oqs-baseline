@@ -1,0 +1,13 @@
+dependencies:
+- name: oqs-client
+  repository: https://arm.rnd.ki.sw.ericsson.se/artifactory/proj-adp-helm-dev-generic-local/cd/sandbox/oqs/oqs-client
+  version: 1.0.0
+- name: oqs-server
+  repository: https://arm.rnd.ki.sw.ericsson.se/artifactory/proj-adp-helm-dev-generic-local/cd/sandbox/oqs/oqs-server
+  version: 1.0.0
+- name: oqs-apidocs
+  repository: https://arm.rnd.ki.sw.ericsson.se/artifactory/proj-adp-helm-dev-generic-local/cd/sandbox/oqs/oqs-apidocs
+  version: 1.0.0
+- name: oqs-reverse-proxy
+  repository: https://arm.rnd.ki.sw.ericsson.se/artifactory/proj-adp-helm-dev-generic-local/cd/sandbox/oqs/oqs-reverse-proxy
+  version: 1.0.0

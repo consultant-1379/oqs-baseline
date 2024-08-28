@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: oqs-baseline
+spec:
+  rules:
+  - host: oqs.icesat.seli.gic.ericsson.se
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: oqs-client
+          servicePort: 80
+      - path: /api
+        backend:
+          serviceName: oqs-server
+          servicePort: 3000
+      - path: /apidocs
+        backend:
+          serviceName: oqs-apidocs
+          servicePort: 8080
+      - path: /helpdocs
+        backend:
+          serviceName: oqs-helpdocs
+          servicePort: 8585
+      - path: /.cdt/
+        backend:
+          serviceName: oqs-helpdocs
+          servicePort: 8585
